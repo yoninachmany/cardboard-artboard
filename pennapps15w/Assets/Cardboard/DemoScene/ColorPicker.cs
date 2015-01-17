@@ -22,11 +22,16 @@ public class ColorPicker : MonoBehaviour {
 	public Texture2D texture; 
 	public GameObject palette; 
 	private MeshCollider meshCollider; 
+	RaycastHit hit;
+	
+	GameObject ColorToolBar;
+	CreatePicker colorPicker;
 
   void Start() {
 	// color palette plane
 	palette = GameObject.CreatePrimitive(PrimitiveType.Plane);
-	palette.transform.Translate(0,5,8);
+	palette.transform.localScale = new Vector3 (0.5f, 0.5f, 0.5f);
+	palette.transform.Translate(-4, 3, 7);
 	palette.transform.Rotate(270, 0, 0);
 	meshCollider = palette.AddComponent("MeshCollider") as MeshCollider;
     
@@ -38,42 +43,31 @@ public class ColorPicker : MonoBehaviour {
 	// Apply texture to palette plane
 	palette.renderer.material.mainTexture = texture;
 	texture.Apply();
+
+	ColorToolBar = GameObject.Find ("ColorToolBar");
+	colorPicker = ColorToolBar.GetComponent<CreatePicker>();
   }
 
   void PickColor() {
-		RaycastHit hit;
-		GameObject ColorToolBar = GameObject.Find ("ColorToolBar");
-		CreatePicker colorPicker = ColorToolBar.GetComponent<CreatePicker>();
+		Renderer renderer = hit.collider.renderer;
+		MeshCollider meshCollider = hit.collider as MeshCollider;
+		if (renderer == null || renderer.sharedMaterial == null || renderer.sharedMaterial.mainTexture == null || meshCollider == null)
+			return;
 		
-		//Debug.Log (GetComponent<Collider>()); 
-		bool isLookedAt = GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity);
-		if (isLookedAt) {
-			//Debug.Log ("Looked at!"); 
-			Renderer renderer = hit.collider.renderer;
-			MeshCollider meshCollider = hit.collider as MeshCollider;
-			if (renderer == null || renderer.sharedMaterial == null || renderer.sharedMaterial.mainTexture == null || meshCollider == null)
-				return;
-			
-			Vector2 pixelUV = hit.textureCoord;
-			//Debug.Log (pixelUV.x + " " + pixelUV.y); 
-			pixelUV.x *= texture.width;
-			pixelUV.y *= texture.height;
-			//Circle(texture, (int)pixelUV.x, (int)pixelUV.y, 5, Color.black);
-			
-			colorPicker.currentColor = texture.GetPixel((int)pixelUV.x, (int)pixelUV.y);
-		}
+		Vector2 pixelUV = hit.textureCoord;
+		pixelUV.x *= texture.width;
+		pixelUV.y *= texture.height;
+
+		Debug.Log("pixel color " + colorPicker.currentColor);
+		colorPicker.currentColor = texture.GetPixel((int)pixelUV.x, (int)pixelUV.y);
   }
 
   void Update() {
-	RaycastHit hit;
-	GameObject ColorToolBar = GameObject.Find ("ColorToolBar");
-	CreatePicker colorPicker = ColorToolBar.GetComponent<CreatePicker>();
-
-	bool isLookedAt = GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity);
-		Debug.Log (isLookedAt);
-	if (Cardboard.SDK.CardboardTriggered && isLookedAt) {
-		Debug.Log("HERE" + colorPicker.currentColor);
-		PickColor ();
+	bool paletteLookedAt = palette.GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity);
+	Debug.Log ("palette seen " + paletteLookedAt);
+	if (Cardboard.SDK.CardboardTriggered && paletteLookedAt) {
+		Debug.Log("HERE " + colorPicker.currentColor);
+		PickColor();
 	}
 
 	colorPicker.cubeCurr.renderer.material.color = colorPicker.currentColor;

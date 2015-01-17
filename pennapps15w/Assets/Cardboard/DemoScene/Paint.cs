@@ -6,48 +6,50 @@ public class Paint : MonoBehaviour {
 	private CardboardHead head;
 	private Vector3 startingPosition;
 	public Texture2D texture; 
+	private GameObject plane;
+	private MeshCollider meshCollider; 
 
 	void Start() {
+		// Create plane canvas programmatically.
+		plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
+		plane.transform.position = new Vector3(0, 0, 8);
+		plane.transform.Rotate(270, 0, 0);
+		meshCollider = plane.AddComponent("MeshCollider") as MeshCollider;
+
 		head = Camera.main.GetComponent<StereoController>().Head;
 		startingPosition = transform.localPosition;
 		CardboardGUI.IsGUIVisible = true;
 		CardboardGUI.onGUICallback += this.OnGUI;
 		
 		// Apply texture to plane.
-		renderer.material.mainTexture = texture;
-
-		int start = 300, end = 400; 
-		for (int i = start; i < end; i++) {
-			for (int j = start; j < end; j++) {
-				Color color = Color.white;
-				texture.SetPixel(i, j, color);
-			}
-		}
+		plane.renderer.material.mainTexture = texture;
 		texture.Apply ();
-		//Debug.Log (head); 
 	}
 	
 	void Update() {
+		// Detect whether user is looking at camera. 
 		RaycastHit hit;
-		//Debug.Log (GetComponent<Collider>()); 
-		bool isLookedAt = GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity);
+		bool isLookedAt = plane.GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity);
+		// If the plane is being looked out, determine exactly which pixel on the texture is being looked at.
 		if (isLookedAt) {
 			//Debug.Log ("Looked at!"); 
 			Renderer renderer = hit.collider.renderer;
 			MeshCollider meshCollider = hit.collider as MeshCollider;
 			if (renderer == null || renderer.sharedMaterial == null || renderer.sharedMaterial.mainTexture == null || meshCollider == null)
 				return;
-			
+
+			// "Paint" the pixel.
 			Vector2 pixelUV = hit.textureCoord;
 			//Debug.Log (pixelUV.x + " " + pixelUV.y); 
 			pixelUV.x *= texture.width;
 			pixelUV.y *= texture.height;
-			Circle(texture, (int)pixelUV.x, (int)pixelUV.y, 5, Color.black);
-			//texture.SetPixel((int)pixelUV.x, (int)pixelUV.y, Color.white);
+
+			GameObject ColorToolBar = GameObject.Find ("ColorToolBar");
+			CreatePicker colorPicker = ColorToolBar.GetComponent<CreatePicker>();
+
+			Circle(texture, (int)pixelUV.x, (int)pixelUV.y, 5, colorPicker.currentColor);
 			texture.Apply();
 		}
-		
-
 
 		/*RaycastHit hit;
 		bool isLookedAt = GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity);*/

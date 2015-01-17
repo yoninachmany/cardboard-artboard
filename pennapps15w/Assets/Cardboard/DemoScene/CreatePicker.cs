@@ -14,13 +14,13 @@ public class CreatePicker : MonoBehaviour {
 		cubeCurr.transform.Translate(-2, 1, 5);
 		cubeCurr.renderer.material.color = Color.red;
 
+		/*
 		// blue cube for color picking
 		GameObject cubeBlue = GameObject.CreatePrimitive(PrimitiveType.Cube);
 		cubeBlue.transform.Translate(-2, 2, 5);
 		cubeBlue.renderer.material.color = Color.blue;
 		var cubeScript = cubeBlue.AddComponent<ColorPicker>();
 
-		/*
 		GameObject cubeGreen = GameObject.CreatePrimitive(PrimitiveType.Cube);
 		cubeGreen.transform.Translate(-2, 3, 5);
 		cubeGreen.renderer.material.color = Color.green;
