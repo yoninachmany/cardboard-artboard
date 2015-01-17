@@ -9,12 +9,6 @@ public class CreatePicker : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-		// color picker plane
-		GameObject palette = GameObject.CreatePrimitive(PrimitiveType.Plane);
-		palette.transform.Translate(0,5,8);
-		palette.transform.Rotate(270, 0, 0);
-		var paletteScript = palette.AddComponent<Palette>();
-
 		// cube shows current color
 		cubeCurr = GameObject.CreatePrimitive(PrimitiveType.Cube);
 		cubeCurr.transform.Translate(-2, 1, 5);
@@ -24,7 +18,7 @@ public class CreatePicker : MonoBehaviour {
 		GameObject cubeBlue = GameObject.CreatePrimitive(PrimitiveType.Cube);
 		cubeBlue.transform.Translate(-2, 2, 5);
 		cubeBlue.renderer.material.color = Color.blue;
-		var cubeScript = cubeBlue.AddComponent<Teleport>();
+		var cubeScript = cubeBlue.AddComponent<ColorPicker>();
 
 		/*
 		GameObject cubeGreen = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -41,5 +35,6 @@ public class CreatePicker : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		cubeCurr.renderer.material.color = currentColor;
+		Debug.Log("updated color");
 	}
 }
