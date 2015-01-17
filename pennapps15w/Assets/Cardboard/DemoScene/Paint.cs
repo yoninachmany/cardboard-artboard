@@ -6,16 +6,20 @@ public class Paint : MonoBehaviour {
 	private CardboardHead head;
 	private Vector3 startingPosition;
 	public Texture2D texture; 
+	public Texture2D[] textures; 
 	private GameObject[] planes;
-	private int numPlanes = 6; 
+	private int NUM_PLANES = 6; 
 	private MeshCollider meshCollider; 
 
 	void Start() {
-		planes = new GameObject[6];
+		planes = new GameObject[NUM_PLANES];
+		textures = new Texture2D[NUM_PLANES]; 
 
 		// Create plane canvas programmatically.
-		for (int i = 0; i < 6; i++) {
+		// Create 6 textures.
+		for (int i = 0; i < NUM_PLANES; i++) {
 			planes[i] = GameObject.CreatePrimitive(PrimitiveType.Plane);
+			textures[i] = Texture2D.blackTexture; 
 		}
 		// Plane in front of camera.
 		planes[0].transform.position = new Vector3(0, 5.6F, 5F);
@@ -51,7 +55,10 @@ public class Paint : MonoBehaviour {
 		
 		// Apply texture to plane.
 		planes[0].renderer.material.mainTexture = texture;
-		planes[1].renderer.material.mainTexture = texture;
+		for (int i = 1; i < NUM_PLANES; i++) {
+			planes[i].renderer.material.mainTexture = textures[i];
+		}
+
 		texture.Apply();
 
 		// Save file image.
