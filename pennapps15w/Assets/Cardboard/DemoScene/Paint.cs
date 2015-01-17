@@ -6,15 +6,39 @@ public class Paint : MonoBehaviour {
 	private CardboardHead head;
 	private Vector3 startingPosition;
 	public Texture2D texture; 
-	private GameObject plane;
+	private GameObject[] planes;
+	private int numPlanes = 6; 
 	private MeshCollider meshCollider; 
 
 	void Start() {
+		planes = new GameObject[6];
+
 		// Create plane canvas programmatically.
-		plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
-		plane.transform.position = new Vector3(0, 0.5F, 3F);
-		plane.transform.Rotate(270, 0, 0);
-		meshCollider = plane.AddComponent("MeshCollider") as MeshCollider;
+		for (int i = 0; i < 4; i++) {
+			planes[i] = GameObject.CreatePrimitive(PrimitiveType.Plane);
+		}
+		// Plane in front of camera.
+		planes[0].transform.position = new Vector3(0, 5F, 5F);
+		planes[0].transform.Rotate(270, 0, 0);
+		meshCollider = planes[0].AddComponent("MeshCollider") as MeshCollider;
+		// Plane behind camera.
+		planes[1].transform.position = new Vector3(0, 5F, -5F);
+		planes[1].transform.Rotate(90, 0, 0);
+		meshCollider = planes[1].AddComponent("MeshCollider") as MeshCollider;
+		// Planes on the side of the camera.
+		planes[2].transform.position = new Vector3(-5F, 5F, 0);
+		planes[2].transform.Rotate(0, 0, 270);
+		meshCollider = planes[2].AddComponent("MeshCollider") as MeshCollider;
+		planes[3].transform.position = new Vector3(5F, 5F, 0);
+		planes[3].transform.Rotate(0, 0, 90);
+		meshCollider = planes[3].AddComponent("MeshCollider") as MeshCollider;
+
+		/*planes[4].transform.position = new Vector3(5F, 0, 5F);
+		planes[4].transform.Rotate(0, 270, 0);
+		meshCollider = planes[4].AddComponent("MeshCollider") as MeshCollider;
+		planes[5].transform.position = new Vector3(5F, 0, -5F);
+		planes[5].transform.Rotate(0, 90, 0);
+		meshCollider = planes[5].AddComponent("MeshCollider") as MeshCollider;*/
 
 		head = Camera.main.GetComponent<StereoController>().Head;
 		startingPosition = transform.localPosition;
@@ -22,14 +46,19 @@ public class Paint : MonoBehaviour {
 		CardboardGUI.onGUICallback += this.OnGUI;
 		
 		// Apply texture to plane.
-		plane.renderer.material.mainTexture = texture;
-		texture.Apply ();
+		planes[0].renderer.material.mainTexture = texture;
+		planes[1].renderer.material.mainTexture = texture;
+		texture.Apply();
+
+		// Save file image.
+		byte[] image = texture.EncodeToJPG();
+		//File.WriteAllBytes("image.jpg", image);
 	}
 	
 	void Update() {
 		// Detect whether user is looking at camera. 
 		RaycastHit hit;
-		bool isLookedAt = plane.GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity);
+		bool isLookedAt = planes[0].GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity);
 		// If the plane is being looked out, determine exactly which pixel on the texture is being looked at.
 		if (isLookedAt) {
 			Renderer renderer = hit.collider.renderer;
@@ -41,7 +70,7 @@ public class Paint : MonoBehaviour {
 			Vector2 pixelUV = hit.textureCoord;
 			pixelUV.x *= texture.width;
 			pixelUV.y *= texture.height;
-			Circle(texture, (int)pixelUV.x, (int)pixelUV.y, 5, Color.green);
+			Circle(texture, (int)pixelUV.x, (int)pixelUV.y, 5, Color.blue);
 			texture.Apply();
 		}
 
