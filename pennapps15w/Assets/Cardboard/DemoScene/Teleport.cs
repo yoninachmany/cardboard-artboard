@@ -30,7 +30,7 @@ public class Teleport : MonoBehaviour {
   void Update() {
     RaycastHit hit;
     bool isLookedAt = GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity);
-    GetComponent<Renderer>().material.color = isLookedAt ? Color.green : Color.red;
+    GetComponent<Renderer>().material.color = isLookedAt ? Color.white : Color.grey;
     if (Cardboard.SDK.CardboardTriggered && isLookedAt) {
       // Teleport randomly.
       Vector3 direction = Random.onUnitSphere;
