@@ -37,12 +37,14 @@ public class Teleport : MonoBehaviour {
     bool isLookedAt = GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity);
 	//start timer ifLookedAt and timer not started
 	if (isLookedAt) {
+		Debug.Log("isLookedAt");
 		timeLeft -= Time.deltaTime;
 		if (timeLeft < 0) {
 			Debug.Log("Color selected!");
 		}
 	}
 	else {
+			Debug.Log("not isLookedAt");
 		timeLeft = 30.0f;
 	}	
 	
