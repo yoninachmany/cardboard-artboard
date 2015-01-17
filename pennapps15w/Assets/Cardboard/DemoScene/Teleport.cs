@@ -21,18 +21,31 @@ public class Teleport : MonoBehaviour {
   	private Vector3 startingPosition;
 	public Texture2D texture; 
 	public GameObject plane; 
+	//for timer, maybe not necessary
+	float timeLeft = 30.0f;
 
   void Start() {
     head = Camera.main.GetComponent<StereoController>().Head;
     startingPosition = transform.localPosition;
     CardboardGUI.IsGUIVisible = true;
     CardboardGUI.onGUICallback += this.OnGUI;
-  }
+  }	
 
   void Update() {
     RaycastHit hit;
 	//Debug.Log (GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity));
     bool isLookedAt = GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity);
+	//start timer ifLookedAt and timer not started
+	if (isLookedAt) {
+		timeLeft -= Time.deltaTime;
+		if (timeLeft < 0) {
+			Debug.Log("Color selected!");
+		}
+	}
+	else {
+		timeLeft = 30.0f;
+	}	
+	
     GetComponent<Renderer>().material.color = isLookedAt ? Color.white : Color.grey;
     if (Cardboard.SDK.CardboardTriggered && isLookedAt) {
       // Teleport randomly.
@@ -42,7 +55,7 @@ public class Teleport : MonoBehaviour {
       transform.localPosition = direction * distance;
     }
   }
-
+	
   void OnGUI() {
     if (!CardboardGUI.OKToDraw(this)) {
       return;
@@ -50,5 +63,8 @@ public class Teleport : MonoBehaviour {
 //    if (GUI.Button(new Rect(50, 50, 200, 50), "Reset")) {
 //      transform.localPosition = startingPosition;
 //    }
+//	var guiTime = Time.time - startTime;
+//	//var seconds : int = guiTime % 60;
+//		Debug.Log(guiTime);
   }
 }
