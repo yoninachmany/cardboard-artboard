@@ -44,6 +44,7 @@ public class Teleport : MonoBehaviour {
 		if (timeLeft < 0) {
 			Debug.Log("Color selected!");
 			GetComponent<Renderer>().material.color = Color.blue;
+			audio.Play();
 		}
 	}
 	if (!isLookedAt) {
