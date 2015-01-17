@@ -27,16 +27,13 @@ public class Teleport : MonoBehaviour {
     startingPosition = transform.localPosition;
     CardboardGUI.IsGUIVisible = true;
     CardboardGUI.onGUICallback += this.OnGUI;
-	
-	// Apply texture to plane.
-	//plane.renderer.material.mainTexture = texture;
   }
 
   void Update() {
     RaycastHit hit;
 	//Debug.Log (GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity));
     bool isLookedAt = GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity);
-    GetComponent<Renderer>().material.color = isLookedAt ? Color.green : Color.red;
+    GetComponent<Renderer>().material.color = isLookedAt ? Color.white : Color.grey;
     if (Cardboard.SDK.CardboardTriggered && isLookedAt) {
       // Teleport randomly.
       Vector3 direction = Random.onUnitSphere;
@@ -50,8 +47,8 @@ public class Teleport : MonoBehaviour {
     if (!CardboardGUI.OKToDraw(this)) {
       return;
     }
-    if (GUI.Button(new Rect(50, 50, 200, 50), "Reset")) {
-      transform.localPosition = startingPosition;
-    }
+//    if (GUI.Button(new Rect(50, 50, 200, 50), "Reset")) {
+//      transform.localPosition = startingPosition;
+//    }
   }
 }
