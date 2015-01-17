@@ -14,29 +14,33 @@ public class Paint : MonoBehaviour {
 		planes = new GameObject[6];
 
 		// Create plane canvas programmatically.
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 6; i++) {
 			planes[i] = GameObject.CreatePrimitive(PrimitiveType.Plane);
 		}
 		// Plane in front of camera.
-		planes[0].transform.position = new Vector3(0, 5F, 5F);
+		planes[0].transform.position = new Vector3(0, 5.6F, 5F);
 		planes[0].transform.Rotate(270, 0, 0);
 		meshCollider = planes[0].AddComponent("MeshCollider") as MeshCollider;
 		// Plane behind camera.
-		planes[1].transform.position = new Vector3(0, 5F, -5F);
+		planes[1].transform.position = new Vector3(0, 5.6F, -5F);
 		planes[1].transform.Rotate(90, 0, 0);
 		meshCollider = planes[1].AddComponent("MeshCollider") as MeshCollider;
 		// Planes on the side of the camera.
-		planes[2].transform.position = new Vector3(-5F, 5F, 0);
+		planes[2].transform.position = new Vector3(-5F, 5.6F, 0);
 		planes[2].transform.Rotate(0, 0, 270);
 		meshCollider = planes[2].AddComponent("MeshCollider") as MeshCollider;
-		planes[3].transform.position = new Vector3(5F, 5F, 0);
+		planes[3].transform.position = new Vector3(5F, 5.6F, 0);
 		planes[3].transform.Rotate(0, 0, 90);
 		meshCollider = planes[3].AddComponent("MeshCollider") as MeshCollider;
-
-		/*planes[4].transform.position = new Vector3(5F, 0, 5F);
-		planes[4].transform.Rotate(0, 270, 0);
+		// Plane below camera.
+		planes[4].transform.position = new Vector3(0, 0.6F, 0);
+		planes[4].transform.Rotate(0, 0, 0);
 		meshCollider = planes[4].AddComponent("MeshCollider") as MeshCollider;
-		planes[5].transform.position = new Vector3(5F, 0, -5F);
+		// Plane above camera.
+		planes[5].transform.position = new Vector3(0, 5.6F, 0);
+		planes[5].transform.Rotate(0, 0, 180);
+		meshCollider = planes[5].AddComponent("MeshCollider") as MeshCollider;
+		/*planes[5].transform.position = new Vector3(5F, 0, -5F);
 		planes[5].transform.Rotate(0, 90, 0);
 		meshCollider = planes[5].AddComponent("MeshCollider") as MeshCollider;*/
 
