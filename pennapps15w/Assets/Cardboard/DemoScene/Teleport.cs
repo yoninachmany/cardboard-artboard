@@ -17,18 +17,24 @@ using System.Collections;
 
 [RequireComponent(typeof(Collider))]
 public class Teleport : MonoBehaviour {
-  private CardboardHead head;
-  private Vector3 startingPosition;
+  	private CardboardHead head;
+  	private Vector3 startingPosition;
+	public Texture2D texture; 
+	public GameObject plane; 
 
   void Start() {
     head = Camera.main.GetComponent<StereoController>().Head;
     startingPosition = transform.localPosition;
     CardboardGUI.IsGUIVisible = true;
     CardboardGUI.onGUICallback += this.OnGUI;
+	
+	// Apply texture to plane.
+	//plane.renderer.material.mainTexture = texture;
   }
 
   void Update() {
     RaycastHit hit;
+	//Debug.Log (GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity));
     bool isLookedAt = GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity);
     GetComponent<Renderer>().material.color = isLookedAt ? Color.white : Color.grey;
     if (Cardboard.SDK.CardboardTriggered && isLookedAt) {
