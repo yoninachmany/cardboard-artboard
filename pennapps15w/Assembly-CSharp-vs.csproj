@@ -46,7 +46,6 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Cardboard\DemoScene\Paint.cs" />
      <Compile Include="Assets\Cardboard\DemoScene\Teleport.cs" />
      <Compile Include="Assets\Cardboard\Scripts\Cardboard.cs" />
      <Compile Include="Assets\Cardboard\Scripts\CardboardEye.cs" />
