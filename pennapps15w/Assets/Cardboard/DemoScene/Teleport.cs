@@ -25,6 +25,7 @@ public class Teleport : MonoBehaviour {
     startingPosition = transform.localPosition;
     CardboardGUI.IsGUIVisible = true;
     CardboardGUI.onGUICallback += this.OnGUI;
+	//CardBoardGUI.CardboardGUIMouse = true;
   }
 
   void Update() {
@@ -44,8 +45,8 @@ public class Teleport : MonoBehaviour {
     if (!CardboardGUI.OKToDraw(this)) {
       return;
     }
-    if (GUI.Button(new Rect(50, 50, 200, 50), "Reset")) {
-      transform.localPosition = startingPosition;
-    }
+//    if (GUI.Button(new Rect(50, 50, 200, 50), "Reset")) {
+//      transform.localPosition = startingPosition;
+//    }
   }
 }
