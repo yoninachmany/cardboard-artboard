@@ -27,9 +27,13 @@ public class Teleport : MonoBehaviour {
     startingPosition = transform.localPosition;
     CardboardGUI.IsGUIVisible = true;
     CardboardGUI.onGUICallback += this.OnGUI;
+<<<<<<< HEAD
+	//CardBoardGUI.CardboardGUIMouse = true;
+=======
 	
 	// Apply texture to plane.
 	//plane.renderer.material.mainTexture = texture;
+>>>>>>> fc57d2882f1efe62b8b71f953fc0383733a947c8
   }
 
   void Update() {
@@ -50,8 +54,8 @@ public class Teleport : MonoBehaviour {
     if (!CardboardGUI.OKToDraw(this)) {
       return;
     }
-    if (GUI.Button(new Rect(50, 50, 200, 50), "Reset")) {
-      transform.localPosition = startingPosition;
-    }
+//    if (GUI.Button(new Rect(50, 50, 200, 50), "Reset")) {
+//      transform.localPosition = startingPosition;
+//    }
   }
 }
