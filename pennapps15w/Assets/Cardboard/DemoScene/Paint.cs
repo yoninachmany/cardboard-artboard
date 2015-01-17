@@ -5,8 +5,7 @@ using System.Collections;
 public class Paint : MonoBehaviour {
 	private CardboardHead head;
 	private Vector3 startingPosition;
-	public Texture2D texture, texture1, texture2, texture3, texture4, texture5; 
-	//public Texture2D[] textures = new Texture2D[6]; 
+	public Texture2D texture0, texture1, texture2, texture3, texture4, texture5; 
 	private GameObject[] planes;
 	private int NUM_PLANES = 6; 
 	private MeshCollider meshCollider; 
@@ -14,13 +13,10 @@ public class Paint : MonoBehaviour {
 
 	void Start() {
 		planes = new GameObject[NUM_PLANES];
-		//textures = new Texture2D[NUM_PLANES]; 
 
 		// Create plane canvas programmatically.
-		// Create 6 textures.
 		for (int i = 0; i < NUM_PLANES; i++) {
 			planes[i] = GameObject.CreatePrimitive(PrimitiveType.Plane);
-			//textures[i] = Texture2D.blackTexture; 
 		}
 		// Plane in front of camera.
 		planes[0].transform.position = new Vector3(0, 5.6F, 5F);
@@ -51,15 +47,15 @@ public class Paint : MonoBehaviour {
 		CardboardGUI.IsGUIVisible = true;
 		CardboardGUI.onGUICallback += this.OnGUI;
 		
-		// Apply texture to plane.
-		planes[0].renderer.material.mainTexture = texture;
+		// Apply textures to planes.
+		planes[0].renderer.material.mainTexture = texture0;
 		planes[1].renderer.material.mainTexture = texture1;
 		planes[2].renderer.material.mainTexture = texture2;
 		planes[3].renderer.material.mainTexture = texture3;
 		planes[4].renderer.material.mainTexture = texture4;
 		planes[5].renderer.material.mainTexture = texture5;
 
-		texture.Apply();
+		texture0.Apply();
 		texture1.Apply();
 		texture2.Apply();
 		texture3.Apply();
@@ -67,29 +63,13 @@ public class Paint : MonoBehaviour {
 		texture5.Apply();
 
 		// Save file image.
-		byte[] image = texture.EncodeToJPG();
+		byte[] image = texture0.EncodeToJPG();
 		//File.WriteAllBytes("image.jpg", image);
 	}
 	
 	void Update() {
 		// Detect whether user is looking at camera. 
-		RaycastHit hit;
-		bool isLookedAt = planes[0].GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity);
-		// If the plane is being looked out, determine exactly which pixel on the texture is being looked at.
-		if (isLookedAt) {
-			Renderer renderer = hit.collider.renderer;
-			MeshCollider meshCollider = hit.collider as MeshCollider;
-			if (renderer == null || renderer.sharedMaterial == null || renderer.sharedMaterial.mainTexture == null || meshCollider == null)
-				return;
-
-			// "Paint" the pixel.
-			Vector2 pixelUV = hit.textureCoord;
-			pixelUV.x *= texture.width;
-			pixelUV.y *= texture.height;
-			Circle(texture, (int)pixelUV.x, (int)pixelUV.y, 5, penColor);
-			texture.Apply();
-		}
-
+		DetectLookAt(0, texture0);
 		DetectLookAt(1, texture1); 
 		DetectLookAt(2, texture2); 
 		DetectLookAt(3, texture3); 
@@ -111,16 +91,15 @@ public class Paint : MonoBehaviour {
 	void DetectLookAt(int index, Texture2D tex) {
 		RaycastHit hit;
 		bool isLookedAt = planes[index].GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity);
+
 		// If the plane is being looked out, determine exactly which pixel on the texture is being looked at.
 		if (isLookedAt) {
-			Debug.Log ("Is looked at!"); 
 			Renderer renderer = hit.collider.renderer;
 			MeshCollider meshCollider = hit.collider as MeshCollider;
 			if (renderer == null || renderer.sharedMaterial == null || renderer.sharedMaterial.mainTexture == null || meshCollider == null) {
-				Debug.Log ("Not working");
 				return;
 			}
-			
+
 			// "Paint" the pixel.
 			Vector2 pixelUV = hit.textureCoord;
 			pixelUV.x *= tex.width;
@@ -139,6 +118,7 @@ public class Paint : MonoBehaviour {
 		}
 	}
 
+	// Draw a filled circle on a texture.
 	// http://answers.unity3d.com/questions/590469/drawing-a-solid-circle-onto-texture.html
 	void Circle(Texture2D tex, int cx, int cy, int r, Color col) {
 		int x, y, px, nx, py, ny, d;
