@@ -14,9 +14,9 @@ public class CameraBehavior : MonoBehaviour {
 //		plane.transform.Translate(0,0,8);
 //		plane.transform.Rotate (270, 0, 0);
 		cyl.transform.parent = transform;
-		cyl.transform.localPosition = new Vector3(0f, 0f, 0.7f);
+		cyl.transform.localPosition = new Vector3(0f, 0f, 2.5f);
 		cyl.transform.Rotate(90, 0, 0);
-		cyl.transform.localScale = new Vector3(0.05f, .0000000007f, 0.05f);
+		cyl.transform.localScale = new Vector3(0.1f, .0000000007f, 0.1f);
 		cyl.renderer.material.color = Color.black;
 	}
 	
