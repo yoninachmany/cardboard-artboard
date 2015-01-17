@@ -22,7 +22,7 @@ public class Teleport : MonoBehaviour {
 	public Texture2D texture; 
 	public GameObject plane; 
 	//for timer, maybe not necessary
-	float timeLeft = 30.0f;
+	float timeLeft = 2.0f;
 
   void Start() {
     head = Camera.main.GetComponent<StereoController>().Head;
@@ -38,14 +38,19 @@ public class Teleport : MonoBehaviour {
 	//start timer ifLookedAt and timer not started
 	if (isLookedAt) {
 		Debug.Log("isLookedAt");
-		timeLeft -= Time.deltaTime;
+		Debug.Log(timeLeft);
+		if (timeLeft > 0) {
+			timeLeft -= Time.deltaTime;
+		}
 		if (timeLeft < 0) {
 			Debug.Log("Color selected!");
+	 		renderer.material.color = Color.blue;
 		}
 	}
-	else {
-			Debug.Log("not isLookedAt");
-		timeLeft = 30.0f;
+	if (!isLookedAt) {
+
+		Debug.Log("not isLookedAt");
+		timeLeft = 2.0f;
 	}	
 	
     GetComponent<Renderer>().material.color = isLookedAt ? Color.white : Color.grey;
