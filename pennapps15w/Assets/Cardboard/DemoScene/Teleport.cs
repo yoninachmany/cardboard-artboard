@@ -35,7 +35,6 @@ public class Teleport : MonoBehaviour {
     RaycastHit hit;
 	//Debug.Log (GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity));
     bool isLookedAt = GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity);
-	//start timer ifLookedAt and timer not started
 	if (isLookedAt) {
 		Debug.Log("isLookedAt");
 		Debug.Log(timeLeft);
@@ -44,7 +43,7 @@ public class Teleport : MonoBehaviour {
 		}
 		if (timeLeft < 0) {
 			Debug.Log("Color selected!");
-	 		renderer.material.color = Color.blue;
+			GetComponent<Renderer>().material.color = Color.blue;
 		}
 	}
 	if (!isLookedAt) {
@@ -53,7 +52,7 @@ public class Teleport : MonoBehaviour {
 		timeLeft = 2.0f;
 	}	
 	
-    GetComponent<Renderer>().material.color = isLookedAt ? Color.white : Color.grey;
+//    GetComponent<Renderer>().material.color = isLookedAt ? Color.white : Color.grey;
     if (Cardboard.SDK.CardboardTriggered && isLookedAt) {
       // Teleport randomly.
       Vector3 direction = Random.onUnitSphere;
