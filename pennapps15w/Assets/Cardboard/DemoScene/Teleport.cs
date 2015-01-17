@@ -30,25 +30,23 @@ public class Teleport : MonoBehaviour {
   }
 
   void Update() {
-    RaycastHit hit;
-	//Debug.Log (GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity));
-    bool isLookedAt = GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity);
-    GetComponent<Renderer>().material.color = isLookedAt ? Color.white : Color.grey;
-    if (Cardboard.SDK.CardboardTriggered && isLookedAt) {
-      // Teleport randomly.
-      Vector3 direction = Random.onUnitSphere;
-      direction.y = Mathf.Clamp(direction.y, 0.5f, 1f);
-      float distance = 2 * Random.value + 1.5f;
-      transform.localPosition = direction * distance;
-    }
+	RaycastHit hit;
+	GameObject ColorToolBar = GameObject.Find ("ColorToolBar");
+	CreatePicker colorPicker = ColorToolBar.GetComponent<CreatePicker>();
+
+	bool isLookedAt = GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity);
+		Debug.Log (isLookedAt);
+	if (Cardboard.SDK.CardboardTriggered && isLookedAt) {
+			Debug.Log("HERE" + colorPicker.currentColor);
+		colorPicker.currentColor = GetComponent<Renderer>().material.color;
+	}
+		
+	colorPicker.cubeCurr.renderer.material.color = colorPicker.currentColor;
   }
 
   void OnGUI() {
     if (!CardboardGUI.OKToDraw(this)) {
       return;
     }
-//    if (GUI.Button(new Rect(50, 50, 200, 50), "Reset")) {
-//      transform.localPosition = startingPosition;
-//    }
   }
 }

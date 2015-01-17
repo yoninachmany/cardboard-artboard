@@ -32,14 +32,14 @@ public class Paint : MonoBehaviour {
 		//Debug.Log (GetComponent<Collider>()); 
 		bool isLookedAt = GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity);
 		if (isLookedAt) {
-			Debug.Log ("Looked at!"); 
+			//Debug.Log ("Looked at!"); 
 			Renderer renderer = hit.collider.renderer;
 			MeshCollider meshCollider = hit.collider as MeshCollider;
 			if (renderer == null || renderer.sharedMaterial == null || renderer.sharedMaterial.mainTexture == null || meshCollider == null)
 				return;
 			
 			Vector2 pixelUV = hit.textureCoord;
-			Debug.Log (pixelUV.x + " " + pixelUV.y); 
+			//Debug.Log (pixelUV.x + " " + pixelUV.y); 
 			pixelUV.x *= texture.width;
 			pixelUV.y *= texture.height;
 			Circle(texture, (int)pixelUV.x, (int)pixelUV.y, 5, Color.black);
