@@ -54,6 +54,15 @@ public class Paint : MonoBehaviour {
 	public Texture2D texture; // palette texture
 	public GameObject palette; 
 
+	// Eye interaction. 
+	private float timeLeft = 2.0f;
+	private float thresh = .01f;
+	private float stillTimeLeft = 2.0f;
+	public AudioClip sound;
+	private AudioSource source;
+	public Vector3 lastVector;
+	public Vector3 currVector;
+	
 	void Start() {
 		AddButtons();
 		planes = new GameObject[NUM_PLANES];
@@ -61,7 +70,8 @@ public class Paint : MonoBehaviour {
 
 		ClearTextures();
 		PositionLight(); 
-		StartColorPalette (); 
+		StartColorPalette(); 
+		StartAudio(); 
 
 		// Create plane canvas programmatically.
 		for (int i = 0; i < NUM_PLANES; i++) {
@@ -121,7 +131,8 @@ public class Paint : MonoBehaviour {
 	}
 	
 	void Update() {
-		UpdateClick (); 
+		UpdateClick();
+		UpdateAudio(); 
 		if (!HaveButtonsBeenClicked() && !HasColorPaletteBeenClicked() && HasBeenClicked()) {
 			isPenDown = !isPenDown; 
 			if (!isPenDown) {
@@ -401,7 +412,7 @@ public class Paint : MonoBehaviour {
 		pixelUV.x *= texture.width;
 		pixelUV.y *= texture.height;
 		
-		Debug.Log("pixel color " + colorPicker.currentColor);
+		//Debug.Log("pixel color " + colorPicker.currentColor);
 		colorPicker.currentColor = texture.GetPixel((int)pixelUV.x, (int)pixelUV.y);
 	}
 
@@ -423,11 +434,45 @@ public class Paint : MonoBehaviour {
 
 	bool HasColorPaletteBeenClicked() {
 		bool paletteLookedAt = palette.GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity);
-		Debug.Log ("palette seen " + paletteLookedAt);
+		//Debug.Log ("palette seen " + paletteLookedAt);
 		if (HasBeenClicked() && paletteLookedAt) {
 			PickColor();
 		}
 		return paletteLookedAt; 
+	}
+
+	void StartAudio() {
+		source = GetComponent<AudioSource> ();
+		head = Camera.main.GetComponent<StereoController>().Head;
+		startingPosition = transform.localPosition;
+		CardboardGUI.IsGUIVisible = true;
+		CardboardGUI.onGUICallback += this.OnGUI;
+		lastVector = head.Gaze.direction;
+		currVector = head.Gaze.direction;
+	}
+
+	bool isStill() {
+		if (Vector3.Distance(currVector, lastVector) < thresh) {
+			if (stillTimeLeft > 0) {
+				stillTimeLeft -= Time.deltaTime;
+			}
+			if (stillTimeLeft < 0) {
+				stillTimeLeft = 2.0f;
+				return true;
+			}
+			return false;
+		}
+		stillTimeLeft = 2.0f;
+		return false;
+	}
+
+	void UpdateAudio() {
+		lastVector = currVector;
+		currVector = head.Gaze.direction;
+		if (isStill()) {
+			audio.Play();
+			Debug.Log("isStill!");
+		}
 	}
 }
 

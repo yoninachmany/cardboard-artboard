@@ -34,7 +34,5 @@ public class CreatePicker : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		//cubeCurr.renderer.material.color = currentColor;
-		Debug.Log("updated color");
 	}
 }

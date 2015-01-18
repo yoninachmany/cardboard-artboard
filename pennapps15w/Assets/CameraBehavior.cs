@@ -21,8 +21,8 @@ public class CameraBehavior : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		ColorToolBar = GameObject.Find ("ColorToolBar");
+		/*ColorToolBar = GameObject.Find ("ColorToolBar");
 		colorPicker = ColorToolBar.GetComponent<CreatePicker> ();
-		cyl.renderer.material.color = colorPicker.currentColor;
+		cyl.renderer.material.color = colorPicker.currentColor;*/
 	}
 }
