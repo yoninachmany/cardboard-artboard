@@ -44,23 +44,27 @@ public class Teleport : MonoBehaviour {
     CardboardGUI.onGUICallback += this.OnGUI;
 	lastVector = head.Gaze.direction;
 	currVector = head.Gaze.direction;
+	Debug.Log(Vector3.Distance(lastVector,currVector));
   }	
 
   void Update() {
     RaycastHit hit;
 	lastVector = currVector;
 	currVector = head.Gaze.direction;
+	Debug.Log(Vector3.Distance(lastVector,currVector));
 	if (Vector3.Distance(currVector, lastVector) < thresh) {
 		if (stillTimeLeft > 0) {
 			stillTimeLeft -= Time.deltaTime;
+			Debug.Log("MORE STILL TIME!");
 		}
 		if (stillTimeLeft < 0) {
 			isStill = true;
 			Debug.Log("isStill!");
-				source.PlayOneShot(sound);
+			source.PlayOneShot(sound);
 		}
 	}
 	else {
+		Debug.Log("START AGAIN!");
 		stillTimeLeft = 2.0f;
 		isStill = false;
 	}
