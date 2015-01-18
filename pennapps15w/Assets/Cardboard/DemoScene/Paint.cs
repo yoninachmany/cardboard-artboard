@@ -390,7 +390,7 @@ public class Paint : MonoBehaviour {
 		// color palette plane
 		palette = GameObject.CreatePrimitive(PrimitiveType.Plane);
 		palette.transform.localScale = new Vector3 (0.5f, 0.5f, 0.5f);
-		palette.transform.Translate(0, OFFSET+3.2f, 7.01f);
+		palette.transform.Translate(0, OFFSET+3.2f, 7.5f);
 		palette.transform.Rotate(270, 0, 0);
 		meshCollider = palette.AddComponent("MeshCollider") as MeshCollider;
 
