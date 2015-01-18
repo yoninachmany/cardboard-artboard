@@ -24,15 +24,47 @@ public class Teleport : MonoBehaviour {
 	//for timer, maybe not necessary
 	float timeLeft = 2.0f;
 
+	public AudioClip sound;
+	private AudioSource source;
+
+	public bool isStill = false;
+	float stillTimeLeft = 2.0f;
+	public Vector3 lastVector;
+	public Vector3 currVector;
+	float thresh = .01f;
+
+  void Awake() {
+		source = GetComponent<AudioSource> ();
+  }
+
   void Start() {
     head = Camera.main.GetComponent<StereoController>().Head;
     startingPosition = transform.localPosition;
     CardboardGUI.IsGUIVisible = true;
     CardboardGUI.onGUICallback += this.OnGUI;
+	lastVector = head.Gaze.direction;
+	currVector = head.Gaze.direction;
   }	
 
   void Update() {
     RaycastHit hit;
+	lastVector = currVector;
+	currVector = head.Gaze.direction;
+	if (Vector3.Distance(currVector, lastVector) < thresh) {
+		if (stillTimeLeft > 0) {
+			stillTimeLeft -= Time.deltaTime;
+		}
+		if (stillTimeLeft < 0) {
+			isStill = true;
+			Debug.Log("isStill!");
+				source.PlayOneShot(sound);
+		}
+	}
+	else {
+		stillTimeLeft = 2.0f;
+		isStill = false;
+	}
+
 	//Debug.Log (GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity));
     bool isLookedAt = GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity);
 	if (isLookedAt) {
