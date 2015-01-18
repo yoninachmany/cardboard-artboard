@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using System.Threading;
+using System.Text;
 using System.IO; 
 
 [RequireComponent(typeof(Collider))]
@@ -266,7 +268,6 @@ public class Paint : MonoBehaviour {
 			if (renderer == null || renderer.sharedMaterial == null || renderer.sharedMaterial.mainTexture == null || meshCollider == null) {
 				return;
 			}
-
 			// "Paint" the pixel.
 			Vector2 pixelUV = hit.textureCoord;
 			pixelUV.x *= tex.width;
@@ -275,13 +276,9 @@ public class Paint : MonoBehaviour {
 			tex.Apply();
 		}
 	}
-	
 	void OnGUI() {
 		if (!CardboardGUI.OKToDraw(this)) {
 			return;
-		}
-		if (GUI.Button(new Rect(50, 50, 200, 50), "Reset")) {
-			transform.localPosition = startingPosition;
 		}
 	}
 
@@ -330,6 +327,38 @@ public class Paint : MonoBehaviour {
 				tex.SetPixel(nx, ny, col);
 			}
 		}    
+	}
+
+	void Upload(byte[] arr) {
+		JSONObject body = new JSONObject (JSONObject.Type.OBJECT);
+
+		body.AddField("test3key", System.Convert.ToBase64String(arr));
+		string s = body.print();
+		//Debug.Log (s);
+		
+		Encoding encoding = new System.Text.UTF8Encoding();
+		Hashtable postHeader = new Hashtable();
+		
+		postHeader.Add("Content-Type", "text/json");
+		postHeader.Add("Content-Length", s.Length);
+		
+		WWW poster = new WWW("https://cardboardartboardimg.firebaseio.com/.json", encoding.GetBytes(s), postHeader);
+		while (poster.uploadProgress != 1) {
+			Thread.Sleep (1);
+		}
+		//Debug.Log(poster.error);
+	}
+
+	byte[] DownloadRandom() {
+		WWW get = new WWW("https://cardboardartboardimg.firebaseio.com/.json");
+		while (!get.isDone) {
+			Thread.Sleep(1);
+		}
+		JSONObject json = new JSONObject(get.text);
+		int index = Random.Range(0,json.list.Count);
+		JSONObject child = (JSONObject)json.list[index];
+		Encoding encoding = new System.Text.UTF8Encoding();
+		return encoding.GetBytes(child.list [0].print());
 	}
 
 	void PositionLight() {
@@ -400,7 +429,6 @@ public class Paint : MonoBehaviour {
 		}
 		return paletteLookedAt; 
 	}
-
 }
 
 
