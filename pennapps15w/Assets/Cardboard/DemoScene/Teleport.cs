@@ -21,7 +21,6 @@ public class Teleport : MonoBehaviour {
   	private Vector3 startingPosition;
 	public Texture2D texture; 
 	public GameObject plane; 
-	//for timer, maybe not necessary
 	float timeLeft = 2.0f;
 
 	public AudioClip sound;
@@ -33,29 +32,30 @@ public class Teleport : MonoBehaviour {
 	public Vector3 currVector;
 	float thresh = .01f;
 
-  void Awake() {
-		source = GetComponent<AudioSource> ();
-  }
+//  void Awake() {
+//		source = GetComponent<AudioSource> ();
+//		Debug.Log("HELLO?!");
+//  }
 
   void Start() {
-    head = Camera.main.GetComponent<StereoController>().Head;
+	source = GetComponent<AudioSource> ();
+	head = Camera.main.GetComponent<StereoController>().Head;
     startingPosition = transform.localPosition;
     CardboardGUI.IsGUIVisible = true;
     CardboardGUI.onGUICallback += this.OnGUI;
 	lastVector = head.Gaze.direction;
 	currVector = head.Gaze.direction;
-	Debug.Log(Vector3.Distance(lastVector,currVector));
   }	
 
   void Update() {
     RaycastHit hit;
 	lastVector = currVector;
 	currVector = head.Gaze.direction;
-	Debug.Log(Vector3.Distance(lastVector,currVector));
+//	Debug.Log(Vector3.Distance(lastVector,currVector));
 	if (Vector3.Distance(currVector, lastVector) < thresh) {
 		if (stillTimeLeft > 0) {
 			stillTimeLeft -= Time.deltaTime;
-			Debug.Log("MORE STILL TIME!");
+//			Debug.Log("MORE STILL TIME!");
 		}
 		if (stillTimeLeft < 0) {
 			isStill = true;
@@ -64,7 +64,7 @@ public class Teleport : MonoBehaviour {
 		}
 	}
 	else {
-		Debug.Log("START AGAIN!");
+//		Debug.Log("START AGAIN!");
 		stillTimeLeft = 2.0f;
 		isStill = false;
 	}
@@ -72,20 +72,20 @@ public class Teleport : MonoBehaviour {
 	//Debug.Log (GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity));
     bool isLookedAt = GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity);
 	if (isLookedAt) {
-		Debug.Log("isLookedAt");
+//		Debug.Log("isLookedAt");
 		Debug.Log(timeLeft);
 		if (timeLeft > 0) {
 			timeLeft -= Time.deltaTime;
 		}
 		if (timeLeft < 0) {
-			Debug.Log("Color selected!");
+//			Debug.Log("Color selected!");
 			GetComponent<Renderer>().material.color = Color.blue;
 			audio.Play();
 		}
 	}
 	if (!isLookedAt) {
 
-		Debug.Log("not isLookedAt");
+//		Debug.Log("not isLookedAt");
 		timeLeft = 2.0f;
 	}	
 	
