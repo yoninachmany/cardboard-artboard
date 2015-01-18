@@ -58,15 +58,15 @@ public class ColorPicker : MonoBehaviour {
 		pixelUV.x *= texture.width;
 		pixelUV.y *= texture.height;
 
-		Debug.Log("pixel color " + colorPicker.currentColor);
+		//Debug.Log("pixel color " + colorPicker.currentColor);
 		colorPicker.currentColor = texture.GetPixel((int)pixelUV.x, (int)pixelUV.y);
   }
 
   void Update() {
 	bool paletteLookedAt = palette.GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity);
-	Debug.Log ("palette seen " + paletteLookedAt);
+	//Debug.Log ("palette seen " + paletteLookedAt);
 	if (Cardboard.SDK.CardboardTriggered && paletteLookedAt) {
-		Debug.Log("HERE " + colorPicker.currentColor);
+		//Debug.Log("HERE " + colorPicker.currentColor);
 		PickColor();
 	}
 
