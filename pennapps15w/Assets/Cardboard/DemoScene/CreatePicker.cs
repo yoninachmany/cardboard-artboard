@@ -10,9 +10,9 @@ public class CreatePicker : MonoBehaviour {
 	void Start () {
 
 		// cube shows current color
-		cubeCurr = GameObject.CreatePrimitive(PrimitiveType.Cube);
-		cubeCurr.transform.Translate(-2, 1, 5);
-		cubeCurr.renderer.material.color = Color.red;
+		//cubeCurr = GameObject.CreatePrimitive(PrimitiveType.Cube);
+		//cubeCurr.transform.Translate(-2, 1, 5);
+		//cubeCurr.renderer.material.color = Color.red;
 
 		/*
 		// blue cube for color picking
@@ -34,7 +34,7 @@ public class CreatePicker : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		cubeCurr.renderer.material.color = currentColor;
+		//cubeCurr.renderer.material.color = currentColor;
 		Debug.Log("updated color");
 	}
 }

@@ -31,7 +31,7 @@ public class ColorPicker : MonoBehaviour {
 	// color palette plane
 	palette = GameObject.CreatePrimitive(PrimitiveType.Plane);
 	palette.transform.localScale = new Vector3 (0.5f, 0.5f, 0.5f);
-	palette.transform.Translate(0, 3, 7.01f);
+	palette.transform.Translate(0, 2.5f, 7.01f);
 	palette.transform.Rotate(270, 0, 0);
 	meshCollider = palette.AddComponent("MeshCollider") as MeshCollider;
 
@@ -70,7 +70,7 @@ public class ColorPicker : MonoBehaviour {
 		PickColor();
 	}
 
-	colorPicker.cubeCurr.renderer.material.color = colorPicker.currentColor;
+	//colorPicker.cubeCurr.renderer.material.color = colorPicker.currentColor;
   }
 
   void OnGUI() {

@@ -104,7 +104,7 @@ public class PalettePanels : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		GameObject plane = GameObject.Find ("Plane");
+		GameObject plane = GameObject.Find ("GroundPlane");
 		Paint circle = plane.GetComponent<Paint>();
 
 		bool size1LA = size1.GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity);
