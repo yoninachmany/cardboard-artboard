@@ -59,8 +59,9 @@ public class Teleport : MonoBehaviour {
 		}
 		if (stillTimeLeft < 0) {
 			isStill = true;
-			Debug.Log("isStill!");
-			source.PlayOneShot(sound);
+//			Debug.Log("isStill!");
+			audio.Play();
+//			source.PlayOneShot(sound, 1F);
 		}
 	}
 	else {
@@ -73,14 +74,13 @@ public class Teleport : MonoBehaviour {
     bool isLookedAt = GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity);
 	if (isLookedAt) {
 //		Debug.Log("isLookedAt");
-		Debug.Log(timeLeft);
+//		Debug.Log(timeLeft);
 		if (timeLeft > 0) {
 			timeLeft -= Time.deltaTime;
 		}
 		if (timeLeft < 0) {
 //			Debug.Log("Color selected!");
 			GetComponent<Renderer>().material.color = Color.blue;
-			audio.Play();
 		}
 	}
 	if (!isLookedAt) {
