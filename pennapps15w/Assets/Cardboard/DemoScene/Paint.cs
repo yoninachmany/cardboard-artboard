@@ -1,11 +1,8 @@
 using UnityEngine;
 using System.Collections;
-<<<<<<< HEAD
 using System.Threading;
 using System.Text;
-=======
 using System.IO; 
->>>>>>> baad4bd08e1bf911c374f503647ee2cac73472a2
 
 [RequireComponent(typeof(Collider))]
 public class Paint : MonoBehaviour {
@@ -271,29 +268,6 @@ public class Paint : MonoBehaviour {
 			if (renderer == null || renderer.sharedMaterial == null || renderer.sharedMaterial.mainTexture == null || meshCollider == null) {
 				return;
 			}
-
-<<<<<<< HEAD
-			// "Paint" the pixel if button is down.
-//			if (Cardboard.SDK.CardboardTriggered) {
-				Vector2 pixelUV = hit.textureCoord;
-				pixelUV.x *= texture.width;
-				pixelUV.y *= texture.height;
-				Circle(texture, (int)pixelUV.x, (int)pixelUV.y, 5, Color.green);
-				texture.Apply();
-//			}
-		}
-
-		/*RaycastHit hit;
-		bool isLookedAt = GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity);*/
-		/*GetComponent<Renderer>().material.color = isLookedAt ? Color.green : Color.red;
-		if (Cardboard.SDK.CardboardTriggered && isLookedAt) {
-			// Teleport randomly.
-			Vector3 direction = Random.onUnitSphere;
-			direction.y = Mathf.Clamp(direction.y, 0.5f, 1f);
-			float distance = 2 * Random.value + 1.5f;
-			transform.localPosition = direction * distance;
-		}*/
-=======
 			// "Paint" the pixel.
 			Vector2 pixelUV = hit.textureCoord;
 			pixelUV.x *= tex.width;
@@ -301,14 +275,10 @@ public class Paint : MonoBehaviour {
 			Circle(tex, (int)pixelUV.x, (int)pixelUV.y, radius, colorPicker.currentColor);
 			tex.Apply();
 		}
->>>>>>> baad4bd08e1bf911c374f503647ee2cac73472a2
 	}
 	void OnGUI() {
 		if (!CardboardGUI.OKToDraw(this)) {
 			return;
-		}
-		if (GUI.Button(new Rect(50, 50, 200, 50), "Reset")) {
-			transform.localPosition = startingPosition;
 		}
 	}
 
@@ -359,7 +329,6 @@ public class Paint : MonoBehaviour {
 		}    
 	}
 
-<<<<<<< HEAD
 	void Upload(byte[] arr) {
 		JSONObject body = new JSONObject (JSONObject.Type.OBJECT);
 
@@ -391,7 +360,7 @@ public class Paint : MonoBehaviour {
 		Encoding encoding = new System.Text.UTF8Encoding();
 		return encoding.GetBytes(child.list [0].print());
 	}
-=======
+
 	void PositionLight() {
 		lightGameObject = GameObject.Find("Point light");
 		if (lightGameObject) {
@@ -460,8 +429,6 @@ public class Paint : MonoBehaviour {
 		}
 		return paletteLookedAt; 
 	}
-
->>>>>>> baad4bd08e1bf911c374f503647ee2cac73472a2
 }
 
 
