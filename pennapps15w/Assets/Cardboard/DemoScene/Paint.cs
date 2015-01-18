@@ -47,7 +47,10 @@ public class Paint : MonoBehaviour {
 
 	
 	private bool clickedThisRound;
-	private bool isClicked; 
+	private bool isClicked;
+
+	public Texture2D texture; // palette texture
+	public GameObject palette; 
 
 	void Start() {
 		AddButtons();
@@ -56,6 +59,7 @@ public class Paint : MonoBehaviour {
 
 		ClearTextures();
 		PositionLight(); 
+		StartColorPalette (); 
 
 		// Create plane canvas programmatically.
 		for (int i = 0; i < NUM_PLANES; i++) {
@@ -116,7 +120,7 @@ public class Paint : MonoBehaviour {
 	
 	void Update() {
 		UpdateClick (); 
-		if (!HasPaletteBeenTouched() && HasBeenClicked()) {
+		if (!HaveButtonsBeenClicked() && !HasColorPaletteBeenClicked() && HasBeenClicked()) {
 			isPenDown = !isPenDown; 
 			if (!isPenDown) {
 				// Save textures as PNGs.
@@ -198,7 +202,7 @@ public class Paint : MonoBehaviour {
 		texNew.Apply();
 	}
 
-	bool HasPaletteBeenTouched () {
+	bool HaveButtonsBeenClicked () {
 		GameObject plane = GameObject.Find ("GroundPlane");
 		Paint circle = plane.GetComponent<Paint>();
 		
@@ -356,6 +360,45 @@ public class Paint : MonoBehaviour {
 
 	bool HasBeenClicked() {
 		return isClicked; 
+	}
+
+	void PickColor() {
+		Renderer renderer = hit.collider.renderer;
+		MeshCollider meshCollider = hit.collider as MeshCollider;
+		if (renderer == null || renderer.sharedMaterial == null || renderer.sharedMaterial.mainTexture == null || meshCollider == null)
+			return;
+		
+		Vector2 pixelUV = hit.textureCoord;
+		pixelUV.x *= texture.width;
+		pixelUV.y *= texture.height;
+		
+		Debug.Log("pixel color " + colorPicker.currentColor);
+		colorPicker.currentColor = texture.GetPixel((int)pixelUV.x, (int)pixelUV.y);
+	}
+
+	void StartColorPalette() {
+		// color palette plane
+		palette = GameObject.CreatePrimitive(PrimitiveType.Plane);
+		palette.transform.localScale = new Vector3 (0.5f, 0.5f, 0.5f);
+		palette.transform.Translate(0, 2.5f, 7.01f);
+		palette.transform.Rotate(270, 0, 0);
+		meshCollider = palette.AddComponent("MeshCollider") as MeshCollider;
+
+		// Apply texture to palette plane
+		palette.renderer.material.mainTexture = texture;
+		texture.Apply();
+		
+		ColorToolBar = GameObject.Find ("ColorToolBar");
+		colorPicker = ColorToolBar.GetComponent<CreatePicker>();
+	}
+
+	bool HasColorPaletteBeenClicked() {
+		bool paletteLookedAt = palette.GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity);
+		Debug.Log ("palette seen " + paletteLookedAt);
+		if (HasBeenClicked() && paletteLookedAt) {
+			PickColor();
+		}
+		return paletteLookedAt; 
 	}
 
 }
