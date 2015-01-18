@@ -45,9 +45,14 @@ public class Paint : MonoBehaviour {
 	public Texture2D texExport;
 	public Texture2D texNew;
 
+	
+	private bool clickedThisRound;
+	private bool isClicked; 
+
 	void Start() {
 		AddButtons();
 		planes = new GameObject[NUM_PLANES];
+		clickedThisRound = false; 
 
 		ClearTextures();
 		PositionLight(); 
@@ -110,7 +115,8 @@ public class Paint : MonoBehaviour {
 	}
 	
 	void Update() {
-		if (!HasPaletteBeenTouched() && Cardboard.SDK.CardboardTriggered) {
+		UpdateClick (); 
+		if (!HasPaletteBeenTouched() && HasBeenClicked()) {
 			isPenDown = !isPenDown; 
 			if (!isPenDown) {
 				// Save textures as PNGs.
@@ -130,17 +136,6 @@ public class Paint : MonoBehaviour {
 		DetectLookAt(3, texture3); 
 		DetectLookAt(4, texture4); 
 		DetectLookAt(5, texture5); 
-
-		/*RaycastHit hit;
-		bool isLookedAt = GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity);*/
-		/*GetComponent<Renderer>().material.color = isLookedAt ? Color.green : Color.red;
-		if (Cardboard.SDK.CardboardTriggered && isLookedAt) {
-			// Teleport randomly.
-			Vector3 direction = Random.onUnitSphere;
-			direction.y = Mathf.Clamp(direction.y, 0.5f, 1f);
-			float distance = 2 * Random.value + 1.5f;
-			transform.localPosition = direction * distance;
-		}*/
 	}
 
 	void AddButtons() {
@@ -217,38 +212,38 @@ public class Paint : MonoBehaviour {
 		bool exportLA = export.GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity);
 		bool newLA = newDoc.GetComponent<Collider>().Raycast(head.Gaze, out hit, Mathf.Infinity);
 
-		if (Cardboard.SDK.CardboardTriggered && size1LA) {
+		if (HasBeenClicked() && size1LA) {
 			circle.radius = 1;
 			return true;
 		}
-		if (Cardboard.SDK.CardboardTriggered && size2LA) {
+		if (HasBeenClicked() && size2LA) {
 			circle.radius = 3;
 			return true;
 		}
-		if (Cardboard.SDK.CardboardTriggered && size3LA) {
+		if (HasBeenClicked() && size3LA) {
 			circle.radius = 5;
 			return true;
 		}
-		if (Cardboard.SDK.CardboardTriggered && size4LA) {
+		if (HasBeenClicked() && size4LA) {
 			circle.radius = 10;
 			return true;
 		}
-		if (Cardboard.SDK.CardboardTriggered && size5LA) {
+		if (HasBeenClicked() && size5LA) {
 			circle.radius = 20;
 			return true;
 		}
 
-		if (Cardboard.SDK.CardboardTriggered && newLA) {
+		if (HasBeenClicked() && newLA) {
 			ClearTextures();
 			return true;
 		}
 
-		if (Cardboard.SDK.CardboardTriggered && importLA) {
+		if (HasBeenClicked() && importLA) {
 			// import images
 			return true;
 		}
 
-		if (Cardboard.SDK.CardboardTriggered && exportLA) {
+		if (HasBeenClicked() && exportLA) {
 			// export images
 			return true;
 		}
@@ -336,12 +331,33 @@ public class Paint : MonoBehaviour {
 	void PositionLight() {
 		lightGameObject = GameObject.Find("Point light");
 		if (lightGameObject) {
-			lightGameObject.transform.position = new Vector3(0, 10.5F, 0); 
+			lightGameObject.transform.position = new Vector3(0, 7.5F, 0); 
 			lightGameObject.light.range = 1200F; 
-			lightGameObject.light.intensity = 0.6F; 
+			lightGameObject.light.intensity = 0.5F; 
 			//lightGameObject.light.color = Color.blue;
 		}
 	}
+	
+	void UpdateClick() {
+		if (Cardboard.SDK.CardboardTriggered) {
+			if (!clickedThisRound) {
+				clickedThisRound = true;
+				isClicked = true;
+			} 
+			else {
+				isClicked = false;
+			}
+		} 
+		else {
+			clickedThisRound = false;
+			isClicked = false;
+		}
+	}
+
+	bool HasBeenClicked() {
+		return isClicked; 
+	}
+
 }
 
 
