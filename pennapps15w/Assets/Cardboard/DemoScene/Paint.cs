@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using System.Threading;
+using System.Text;
 using System.IO; 
 
 [RequireComponent(typeof(Collider))]
@@ -286,12 +288,12 @@ public class Paint : MonoBehaviour {
 		}
 
 		if (HasBeenClicked() && importLA) {
-			// import images
+			DownloadRandomAndSet();
 			return true;
 		}
 
 		if (HasBeenClicked() && exportLA) {
-			// export images
+			Upload();
 			return true;
 		}
 
@@ -309,7 +311,6 @@ public class Paint : MonoBehaviour {
 			if (renderer == null || renderer.sharedMaterial == null || renderer.sharedMaterial.mainTexture == null || meshCollider == null) {
 				return;
 			}
-
 			// "Paint" the pixel.
 			Vector2 pixelUV = hit.textureCoord;
 			pixelUV.x *= tex.width;
@@ -318,13 +319,9 @@ public class Paint : MonoBehaviour {
 			tex.Apply();
 		}
 	}
-	
 	void OnGUI() {
 		if (!CardboardGUI.OKToDraw(this)) {
 			return;
-		}
-		if (GUI.Button(new Rect(50, 50, 200, 50), "Reset")) {
-			transform.localPosition = startingPosition;
 		}
 	}
 
@@ -373,6 +370,80 @@ public class Paint : MonoBehaviour {
 				tex.SetPixel(nx, ny, col);
 			}
 		}    
+	}
+
+	void Upload() {
+		JSONObject parentBody = new JSONObject (JSONObject.Type.ARRAY);
+		//JSONObject body0 = new JSONObject (JSONObject.Type.OBJECT);
+		//body0.AddField("key0", System.Convert.ToBase64String(texture0.EncodeToPNG()));
+		parentBody.Add (System.Convert.ToBase64String(texture0.EncodeToPNG()));
+		parentBody.Add (System.Convert.ToBase64String(texture1.EncodeToPNG()));
+		parentBody.Add (System.Convert.ToBase64String(texture2.EncodeToPNG()));
+		parentBody.Add (System.Convert.ToBase64String(texture3.EncodeToPNG()));
+		parentBody.Add (System.Convert.ToBase64String(texture4.EncodeToPNG()));
+		parentBody.Add (System.Convert.ToBase64String(texture5.EncodeToPNG()));
+//		Debug.Log (System.Convert.ToBase64String (texture0.EncodeToPNG ()));
+//		Debug.Log (System.Convert.ToBase64String (texture1.EncodeToPNG ()));
+//		Debug.Log (System.Convert.ToBase64String (texture2.EncodeToPNG ()));
+//		Debug.Log (System.Convert.ToBase64String (texture3.EncodeToPNG ()));
+//		Debug.Log (System.Convert.ToBase64String (texture4.EncodeToPNG ()));
+//		Debug.Log (System.Convert.ToBase64String (texture5.EncodeToPNG ()));
+//		Debug.Log ("separate");
+
+		//string s = body.print();
+		string s = parentBody.print ();
+		//Debug.Log (s);
+		
+		Encoding encoding = new System.Text.UTF8Encoding();
+		Hashtable postHeader = new Hashtable();
+		
+		postHeader.Add("Content-Type", "text/json");
+		postHeader.Add("Content-Length", s.Length);
+		
+		WWW poster = new WWW("https://cardboardartboardimg.firebaseio.com/.json", encoding.GetBytes(s), postHeader);
+		while (poster.uploadProgress != 1) {
+			Thread.Sleep (1);
+		}
+		//Debug.Log(poster.error);
+	}
+
+	void DownloadRandomAndSet() {
+		WWW get = new WWW("https://cardboardartboardimg.firebaseio.com/.json");
+		while (!get.isDone) {
+			Thread.Sleep(1);
+		}
+		JSONObject json = new JSONObject(get.text);
+		int index = Random.Range(0,json.list.Count);
+		JSONObject child = (JSONObject)json.list[index];
+//		Encoding encoding = new System.Text.UTF8Encoding();
+//		encoding.GetBytes(child.list [0].print());
+
+		string str1 = child.list [0].print ();
+		str1 = str1.Substring (1,str1.Length-2);
+		string str2 = child.list [1].print ();
+		str2 = str2.Substring (1,str2.Length-2);
+		string str3 = child.list [2].print ();
+		str3 = str3.Substring (1,str3.Length-2);
+		string str4 = child.list [3].print ();
+		str4 = str4.Substring (1,str4.Length-2);
+		string str5 = child.list [4].print ();
+		str5 = str5.Substring (1,str5.Length-2);
+		string str6 = child.list [5].print ();
+		str6 = str6.Substring (1,str6.Length-2);
+//		Debug.Log (str1);
+//		Debug.Log (str2);
+//		Debug.Log (str3);
+//		Debug.Log (str4);
+//		Debug.Log (str5);
+//		Debug.Log (str6);
+
+		texture0.LoadImage (System.Convert.FromBase64String (str1));
+		texture1.LoadImage (System.Convert.FromBase64String (str2));
+		texture2.LoadImage (System.Convert.FromBase64String (str3));
+		texture3.LoadImage (System.Convert.FromBase64String (str4));
+		texture4.LoadImage (System.Convert.FromBase64String (str5));
+		texture5.LoadImage (System.Convert.FromBase64String (str6));
+
 	}
 
 	void PositionLight() {
@@ -449,7 +520,6 @@ public class Paint : MonoBehaviour {
 		}
 		return paletteLookedAt; 
 	}
-
 }
 
 

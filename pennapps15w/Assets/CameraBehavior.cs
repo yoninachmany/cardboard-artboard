@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Text;
 
 public class CameraBehavior : MonoBehaviour {
+	WWW get;
+	WWW poster;
 
 	GameObject ColorToolBar;
 	CreatePicker colorPicker;
@@ -10,7 +13,7 @@ public class CameraBehavior : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		cyl = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+		GameObject cyl = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
 		cyl.transform.parent = transform;
 		cyl.transform.localPosition = new Vector3(0f, 0f, 3.9f);
 		cyl.transform.Rotate(90, 0, 0);
