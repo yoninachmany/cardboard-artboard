@@ -3,7 +3,7 @@ using System.Collections;
 
 
 public class CreatePicker : MonoBehaviour {
-	public Color currentColor = Color.red;
+	public Color currentColor = Color.blue;
 	public GameObject cubeCurr;
 
 	// Use this for initialization
