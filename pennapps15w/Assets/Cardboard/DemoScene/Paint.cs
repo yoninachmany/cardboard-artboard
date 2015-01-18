@@ -14,7 +14,6 @@ public class Paint : MonoBehaviour {
 
 	public int radius = 5;
 
-	private Color penColor = Color.black;
 	private bool isPenDown = false;
 	private GameObject lightGameObject; 
 
@@ -62,6 +61,7 @@ public class Paint : MonoBehaviour {
 	private AudioSource source;
 	public Vector3 lastVector;
 	public Vector3 currVector;
+	private bool isIControlOn = false; /* iControl is initially off. */ 
 	
 	void Start() {
 		AddButtons();
