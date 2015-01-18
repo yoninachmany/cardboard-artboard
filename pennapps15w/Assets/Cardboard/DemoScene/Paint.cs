@@ -15,10 +15,12 @@ public class Paint : MonoBehaviour {
 	private Color penColor = Color.black;
 	private bool isPenDown = false;
 	private GameObject lightGameObject; 
+	private GameObject cameraGameObject;
 
 	private int NUM_PLANES = 6;
 	private float PLANE_WIDTH = 15F; 
 	public  static float DISTANCE_FROM_GROUND = 0.6F; 
+	float OFFSET = 2.5f;
 
 	RaycastHit hit;
 	
@@ -58,7 +60,8 @@ public class Paint : MonoBehaviour {
 		clickedThisRound = false; 
 
 		ClearTextures();
-		PositionLight(); 
+		PositionLight();
+		PositionCamera ();
 		StartColorPalette (); 
 
 		// Create plane canvas programmatically.
@@ -145,49 +148,49 @@ public class Paint : MonoBehaviour {
 	void AddButtons() {
 		size1 = GameObject.CreatePrimitive (PrimitiveType.Plane);
 		size1.transform.localScale = new Vector3 (0.0625f, 0.0625f, 0.0625f);
-		size1.transform.Translate(-3, DISTANCE_FROM_GROUND+0.625f*8, 7);
+		size1.transform.Translate(-3, DISTANCE_FROM_GROUND+OFFSET+0.625f*8, 7.5f);
 		size1.transform.Rotate (270, 0, 0);
 		size1.renderer.material.mainTexture = texXS;
 		
 		size2 = GameObject.CreatePrimitive (PrimitiveType.Plane);
 		size2.transform.localScale = new Vector3 (0.0625f, 0.0625f, 0.0625f);
-		size2.transform.Translate(-3, DISTANCE_FROM_GROUND+0.625f*7, 7);
+		size2.transform.Translate(-3, DISTANCE_FROM_GROUND+OFFSET+0.625f*7, 7.5f);
 		size2.transform.Rotate (270, 0, 0);
 		size2.renderer.material.mainTexture = texS;
 		
 		size3 = GameObject.CreatePrimitive (PrimitiveType.Plane);
 		size3.transform.localScale = new Vector3 (0.0625f, 0.0625f, 0.0625f);
-		size3.transform.Translate(-3, DISTANCE_FROM_GROUND+0.625f*6, 7);
+		size3.transform.Translate(-3, DISTANCE_FROM_GROUND+OFFSET+0.625f*6, 7.5f);
 		size3.transform.Rotate (270, 0, 0);
 		size3.renderer.material.mainTexture = texM;
 		
 		size4 = GameObject.CreatePrimitive (PrimitiveType.Plane);
 		size4.transform.localScale = new Vector3 (0.0625f, 0.0625f, 0.0625f);
-		size4.transform.Translate(-3, DISTANCE_FROM_GROUND+0.625f*5, 7);
+		size4.transform.Translate(-3, DISTANCE_FROM_GROUND+OFFSET+0.625f*5, 7.5f);
 		size4.transform.Rotate (270, 0, 0);
 		size4.renderer.material.mainTexture = texL;
 		
 		size5 = GameObject.CreatePrimitive (PrimitiveType.Plane);
 		size5.transform.localScale = new Vector3 (0.0625f, 0.0625f, 0.0625f);
-		size5.transform.Translate(-3, DISTANCE_FROM_GROUND+0.625f*4, 7);
+		size5.transform.Translate(-3, DISTANCE_FROM_GROUND+OFFSET+0.625f*4, 7.5f);
 		size5.transform.Rotate (270, 0, 0);
 		size5.renderer.material.mainTexture = texXL;
 		
 		import = GameObject.CreatePrimitive (PrimitiveType.Plane);
 		import.transform.localScale = new Vector3 (0.0625f, 0.0625f, 0.0625f);
-		import.transform.Translate(-3, DISTANCE_FROM_GROUND+0.625f*3, 7);
+		import.transform.Translate(-3, DISTANCE_FROM_GROUND+OFFSET+0.625f*3, 7.5f);
 		import.transform.Rotate (270, 0, 0);
 		import.renderer.material.mainTexture = texImport;
 		
 		export = GameObject.CreatePrimitive (PrimitiveType.Plane);
 		export.transform.localScale = new Vector3 (0.0625f, 0.0625f, 0.0625f);
-		export.transform.Translate(-3, DISTANCE_FROM_GROUND+0.625f*2, 7);
+		export.transform.Translate(-3, DISTANCE_FROM_GROUND+OFFSET+0.625f*2, 7.5f);
 		export.transform.Rotate (270, 0, 0);
 		export.renderer.material.mainTexture = texExport;
 		
 		newDoc = GameObject.CreatePrimitive (PrimitiveType.Plane);
 		newDoc.transform.localScale = new Vector3 (0.0625f, 0.0625f, 0.0625f);
-		newDoc.transform.Translate(-3, DISTANCE_FROM_GROUND+0.625f*1, 7);
+		newDoc.transform.Translate(-3, DISTANCE_FROM_GROUND+OFFSET+0.625f*1, 7.5f);
 		newDoc.transform.Rotate (270, 0, 0);
 		newDoc.renderer.material.mainTexture = texNew;
 		
@@ -307,7 +310,7 @@ public class Paint : MonoBehaviour {
 
 	void CreatePng(Texture2D texture, int i) {
 		byte[] image = texture.EncodeToPNG();
-		File.WriteAllBytes(Application.dataPath + "/../image" + i + ".jpg", image);
+		File.WriteAllBytes(Application.dataPath + "/../image" + i + ".png", image);
 	}
 
 	// Draw a filled circle on a texture.
@@ -318,8 +321,8 @@ public class Paint : MonoBehaviour {
 		for (x = 0; x <= r; x++) {
 			d = (int)Mathf.Ceil(Mathf.Sqrt(r * r - x * x));
 			for (y = 0; y <= d; y++) {
-				px = cx + x;
 				nx = cx - x;
+				px = cx + x;
 				py = cy + y;
 				ny = cy - y;
 				
@@ -339,6 +342,13 @@ public class Paint : MonoBehaviour {
 			lightGameObject.light.range = 1200F; 
 			lightGameObject.light.intensity = 0.5F; 
 			//lightGameObject.light.color = Color.blue;
+		}
+	}
+
+	void PositionCamera() {
+		cameraGameObject = GameObject.Find ("CardboardMain");
+		if (cameraGameObject) {
+			cameraGameObject.transform.position = new Vector3(0, 4.0f, 0);
 		}
 	}
 	
@@ -380,7 +390,7 @@ public class Paint : MonoBehaviour {
 		// color palette plane
 		palette = GameObject.CreatePrimitive(PrimitiveType.Plane);
 		palette.transform.localScale = new Vector3 (0.5f, 0.5f, 0.5f);
-		palette.transform.Translate(0, 2.5f, 7.01f);
+		palette.transform.Translate(0, OFFSET+3.2f, 7.01f);
 		palette.transform.Rotate(270, 0, 0);
 		meshCollider = palette.AddComponent("MeshCollider") as MeshCollider;
 
