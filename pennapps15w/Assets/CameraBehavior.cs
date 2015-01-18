@@ -13,7 +13,7 @@ public class CameraBehavior : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		GameObject cyl = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+		cyl = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
 		cyl.transform.parent = transform;
 		cyl.transform.localPosition = new Vector3(0f, 0f, 3.9f);
 		cyl.transform.Rotate(90, 0, 0);
@@ -23,13 +23,13 @@ public class CameraBehavior : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		/*ColorToolBar = GameObject.Find ("ColorToolBar");
+		ColorToolBar = GameObject.Find ("ColorToolBar");
 		colorPicker = ColorToolBar.GetComponent<CreatePicker> ();
-		cyl.renderer.material.color = colorPicker.currentColor;*/
+		cyl.renderer.material.color = colorPicker.currentColor;
 
-		/*GameObject plane = GameObject.Find ("GroundPlane");
+		GameObject plane = GameObject.Find ("GroundPlane");
 		Paint circle = plane.GetComponent<Paint>();
 		cylRadius = circle.radius / 35.0f;
-		cyl.transform.localScale = new Vector3(cylRadius, .0000000007f, cylRadius);*/
+		cyl.transform.localScale = new Vector3(cylRadius, .0000000007f, cylRadius);
 	}
 }
