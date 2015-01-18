@@ -471,7 +471,11 @@ public class Paint : MonoBehaviour {
 		currVector = head.Gaze.direction;
 		if (isStill()) {
 			audio.Play();
+			isClicked = true; 
 			Debug.Log("isStill!");
+		}
+		else {
+			isClicked = false; 
 		}
 	}
 }
