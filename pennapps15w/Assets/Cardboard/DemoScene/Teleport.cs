@@ -59,9 +59,18 @@ public class Teleport : MonoBehaviour {
 		}
 		if (stillTimeLeft < 0) {
 			isStill = true;
-//			Debug.Log("isStill!");
+			Debug.Log(stillTimeLeft);
+			Debug.Log("isStill!");
 			audio.Play();
 //			source.PlayOneShot(sound, 1F);
+//			GameObject cyl = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+//			//		plane.transform.Translate(0,0,8);
+//			//		plane.transform.Rotate (270, 0, 0);
+//			cyl.transform.parent = transform;
+//			cyl.transform.localPosition = new Vector3(0f, 0f, 2.5f);
+//			cyl.transform.Rotate(90, 0, 0);
+//			cyl.transform.localScale = new Vector3(0.1f, .0000000007f, 0.1f);
+//			cyl.renderer.material.color = Color.black;
 		}
 	}
 	else {
