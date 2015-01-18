@@ -15,7 +15,6 @@ public class Paint : MonoBehaviour {
 
 	public int radius = 5;
 
-	private Color penColor = Color.black;
 	private bool isPenDown = false;
 	private GameObject lightGameObject; 
 	private GameObject cameraGameObject;
@@ -66,16 +65,32 @@ public class Paint : MonoBehaviour {
 	public Texture2D texture; // palette texture
 	public GameObject palette; 
 
+	// Eye interaction. 
+	private float timeLeft = 2.0f;
+	private float thresh = .01f;
+	private float stillTimeLeft = 2.0f;
+	public AudioClip sound;
+	private AudioSource source;
+	public Vector3 lastVector;
+	public Vector3 currVector;
+	private bool isIControlOn = false; /* iControl is initially off. */ 
+	
 	void Start() {
 		AddButtons();
 		planes = new GameObject[NUM_PLANES];
 		clickedThisRound = false; 
 		isEye = false;
 
+		Color32[] texO = texture_o.GetPixels32 ();
+		texture2 = new Texture2D (texture_o.width, texture_o.height);
 		ClearTextures();
-		PositionLight();
-		PositionCamera ();
-		StartColorPalette (); 
+		texture2.SetPixels32(texO);
+		texture2.Apply ();
+
+		PositionLight(); 
+		PositionCamera();
+		StartColorPalette(); 
+		StartAudio(); 
 
 		// Create plane canvas programmatically.
 		for (int i = 0; i < NUM_PLANES; i++) {
@@ -86,10 +101,7 @@ public class Paint : MonoBehaviour {
 		togEye32 = texEye.GetPixels32 ();
 		togMag32 = texMag.GetPixels32 ();
 
-		Color32[] texO = texture_o.GetPixels32 ();
-		texture2 = new Texture2D (texture_o.width, texture_o.height);
-		texture2.SetPixels32(texO);
-		texture2.Apply ();
+
 
 		// Plane in front of camera.
 		planes[0].transform.position = new Vector3(0, PLANE_WIDTH + DISTANCE_FROM_GROUND, PLANE_WIDTH);
@@ -143,7 +155,8 @@ public class Paint : MonoBehaviour {
 	}
 	
 	void Update() {
-		UpdateClick (); 
+		UpdateClick();
+		UpdateAudio(); 
 		if (!HaveButtonsBeenClicked() && !HasColorPaletteBeenClicked() && HasBeenClicked()) {
 			isPenDown = !isPenDown; 
 			if (!isPenDown) {
@@ -274,10 +287,12 @@ public class Paint : MonoBehaviour {
 				toggle.renderer.material.mainTexture = texMag;
 				texMag.Apply();
 				isEye = false;
+				isIControlOn = false; 
 			} else {
 				toggle.renderer.material.mainTexture = texEye;
 				texEye.Apply();
 				isEye = true;
+				isIControlOn = true; 
 			}
 			return true;
 		}
@@ -330,12 +345,19 @@ public class Paint : MonoBehaviour {
 			for (int j = 0; j < texture0.height; j++) {
 				texture0.SetPixel(i, j, Color.white);
 				texture1.SetPixel(i, j, Color.white);
-				texture2.SetPixel(i, j, Color.white);
 				texture3.SetPixel(i, j, Color.white);
 				texture4.SetPixel(i, j, Color.white);
 				texture5.SetPixel(i, j, Color.white);
 			}
 		}
+
+		for (int i = 0; i < texture2.width; i++) {
+			for (int j = 0; j < texture2.height; j++) {
+				texture2.SetPixel(i, j, Color.white);
+			}
+		}
+
+
 
 		texture0.Apply ();
 		texture1.Apply ();
@@ -493,7 +515,6 @@ public class Paint : MonoBehaviour {
 		Vector2 pixelUV = hit.textureCoord;
 		pixelUV.x *= texture.width;
 		pixelUV.y *= texture.height;
-
 		colorPicker.currentColor = texture.GetPixel((int)pixelUV.x, (int)pixelUV.y);
 	}
 
@@ -519,6 +540,48 @@ public class Paint : MonoBehaviour {
 			PickColor();
 		}
 		return paletteLookedAt; 
+	}
+
+	void StartAudio() {
+		source = GetComponent<AudioSource> ();
+		head = Camera.main.GetComponent<StereoController>().Head;
+		startingPosition = transform.localPosition;
+		CardboardGUI.IsGUIVisible = true;
+		CardboardGUI.onGUICallback += this.OnGUI;
+		lastVector = head.Gaze.direction;
+		currVector = head.Gaze.direction;
+	}
+
+	bool isStill() {
+		if (Vector3.Distance(currVector, lastVector) < thresh) {
+			if (stillTimeLeft > 0) {
+				stillTimeLeft -= Time.deltaTime;
+			}
+			if (stillTimeLeft < 0) {
+				stillTimeLeft = 2.0f;
+				return true;
+			}
+			return false;
+		}
+		stillTimeLeft = 2.0f;
+		return false;
+	}
+
+	void UpdateAudio() {
+		lastVector = currVector;
+		currVector = head.Gaze.direction;
+		if (isStill()) {
+			if (isIControlOn) {
+				audio.Play();
+				isClicked = true;
+				Debug.Log("isStill!");
+			}
+		}
+		else {
+			if (isIControlOn) {
+				isClicked = false;
+			}
+		}
 	}
 }
 

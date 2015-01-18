@@ -13,7 +13,7 @@ public class CameraBehavior : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		GameObject cyl = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+		cyl = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
 		cyl.transform.parent = transform;
 		cyl.transform.localPosition = new Vector3(0f, 0f, 3.9f);
 		cyl.transform.Rotate(90, 0, 0);
