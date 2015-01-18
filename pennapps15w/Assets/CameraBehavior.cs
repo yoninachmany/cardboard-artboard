@@ -23,6 +23,6 @@ public class CameraBehavior : MonoBehaviour {
 	void Update () {
 		ColorToolBar = GameObject.Find ("ColorToolBar");
 		colorPicker = ColorToolBar.GetComponent<CreatePicker> ();
-		cyl.renderer.material.color = colorPicker.currentColor;
+		//cyl.renderer.material.color = colorPicker.currentColor;
 	}
 }
