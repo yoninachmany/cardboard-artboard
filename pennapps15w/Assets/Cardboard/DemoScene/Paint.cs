@@ -512,12 +512,16 @@ public class Paint : MonoBehaviour {
 		lastVector = currVector;
 		currVector = head.Gaze.direction;
 		if (isStill()) {
-			audio.Play();
-			isClicked = true; 
-			Debug.Log("isStill!");
+			if (isIControlOn) {
+				audio.Play();
+				isClicked = true;
+				Debug.Log("isStill!");
+			}
 		}
 		else {
-			isClicked = false; 
+			if (isIControlOn) {
+				isClicked = false;
+			}
 		}
 	}
 }
