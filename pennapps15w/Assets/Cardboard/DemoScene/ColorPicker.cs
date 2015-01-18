@@ -31,10 +31,10 @@ public class ColorPicker : MonoBehaviour {
 	// color palette plane
 	palette = GameObject.CreatePrimitive(PrimitiveType.Plane);
 	palette.transform.localScale = new Vector3 (0.5f, 0.5f, 0.5f);
-	palette.transform.Translate(-4, 3, 7);
+	palette.transform.Translate(0, 3, 7.01f);
 	palette.transform.Rotate(270, 0, 0);
 	meshCollider = palette.AddComponent("MeshCollider") as MeshCollider;
-    
+
 	head = Camera.main.GetComponent<StereoController>().Head;
     startingPosition = transform.localPosition;
     CardboardGUI.IsGUIVisible = true;

@@ -8,6 +8,7 @@ public class Paint : MonoBehaviour {
 	public Texture2D texture; 
 	private GameObject plane;
 	private MeshCollider meshCollider; 
+	public int radius = 5;
 
 	void Start() {
 		// Create plane canvas programmatically.
@@ -47,7 +48,7 @@ public class Paint : MonoBehaviour {
 			GameObject ColorToolBar = GameObject.Find ("ColorToolBar");
 			CreatePicker colorPicker = ColorToolBar.GetComponent<CreatePicker>();
 
-			Circle(texture, (int)pixelUV.x, (int)pixelUV.y, 5, colorPicker.currentColor);
+			Circle(texture, (int)pixelUV.x, (int)pixelUV.y, radius, colorPicker.currentColor);
 			texture.Apply();
 		}
 
